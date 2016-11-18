@@ -313,7 +313,7 @@ int getLED(int led[]){
 int getDuration(int dur[]){
    int temp = dur[durationIndex];
    
-   return 1000/temp;
+   return 2000/temp;
 }
 
 // This function returns which Npte needs to adapted next
@@ -336,53 +336,46 @@ void setColor(int clr, int rp, int gp, int bp, int del)
 {
   
   switch(clr){
-    case 1:   //RED
+    case 1: //GREEN
               analogWrite(rp, 255);
               analogWrite(gp, 0);
               analogWrite(bp,0);
-              //Serial.println("RED");
               break;
     
-    case 2:   //ORANGE
-              analogWrite(rp, 255);
-              analogWrite(gp, 165);
-              analogWrite(bp,0);
-              //Serial.println("ORANGE");
+    case 2://VIOLET
+              analogWrite(rp, 30);
+              analogWrite(gp, 128);
+              analogWrite(bp,128);
               break;
     
-    case 3:   //YELLOW
-              analogWrite(rp, 255);
-              analogWrite(gp, 255);
-              analogWrite(bp,0);
-              //Serial.println("YELLOW");
-              break;    
-              
-    case 4:   //GREEN
-              analogWrite(rp, 0);
+    case 3://GREEN
+              analogWrite(rp, 128);
               analogWrite(gp, 128);
               analogWrite(bp,0);
-              //Serial.println("GREEN");
+              break;    
+              
+    case 4://RED
+              analogWrite(rp, 0);
+              analogWrite(gp, 255);
+              analogWrite(bp,0);
               break;    
     
-    case 5:   //CYAN
+    case 5://VIOLET
               analogWrite(rp, 0);
               analogWrite(gp, 255);
               analogWrite(bp,255);
-              //Serial.println("CYAN");
               break; 
-             
-    case 6:   //BLUE
+           
+    case 6://BLUE
               analogWrite(rp, 0);
               analogWrite(gp, 0);
               analogWrite(bp,255);
-              //Serial.println("BLUE");
               break;   
              
-    case 7:   //VIOLET
+    case 7://CYAN
               analogWrite(rp, 238);
               analogWrite(gp, 130);
               analogWrite(bp,238);
-              //Serial.println("VIOLET");
               break; 
     
     case 8:   //WHITE
