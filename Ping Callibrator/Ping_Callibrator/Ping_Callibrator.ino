@@ -96,11 +96,15 @@ void setup()
 Serial.begin(112500);
 pinMode(echo,INPUT);
 pinMode(SPEAKER_OUT, OUTPUT);
-Serial.print("Doing average tests on ");
-Serial.print(MAX_BUFFERSIZE);
-Serial.println(" readings");
+//Serial.print("Doing average tests on ");
+//Serial.print(MAX_BUFFERSIZE);
+//Serial.println(" readings");
 //TODO : set pin 8 to OUTPUT
 pinMode(8, OUTPUT);
+
+for (int i = 1; i < 7; i++){
+ pinMode(i, OUTPUT);
+} 
 }
 
 void loop()
@@ -109,17 +113,22 @@ void loop()
   
   // First, let's light up the relevant LED, and see whether the user steps on it.
   // If the user steps on the right box, we play the tune.
-  
+   //Serial.print("Size of arry:"); Serial.print(sizeof(twinkleColors));
+
   // set left LED which shoes the current box to be stepped
+  
   setColor(getColor(twinkleColors), leftRed, leftGreen, leftBlue, getDuration(twinkleDuration));
   
-  if(colorIndex + 1 < twinkleColor.length)
+  if(colorIndex + 1 < sizeof(twinkleColors)/2)
   setColor(getColor(twinkleColors)+1, rightRed, rightGreen, rightBlue, getDuration(twinkleDuration));
   
+  //Serial.print("Read() = "); Serial.print(read()); Serial.print("\n");
   if(read() == getNote(twinkleNotes)) 
     generateTone(getNote(twinkleNotes), getDuration(twinkleDuration));
   
-  
+  //Serial.print("Note : "); Serial.print(getNote(twinkleNotes)); Serial.print("\n");
+  updateIndex();
+  delay(10);
 }
 // function that returns the latest read value. refer to global conastants for tones.
 int read()
@@ -195,6 +204,8 @@ long lowPassFilter(long newVal)
 
 void generateTone(int index, long duration)
 {
+  duration = 1000/duration;
+  Serial.println("Sound!!!");
   switch(index)
   {
     case 0:
@@ -203,28 +214,28 @@ void generateTone(int index, long duration)
      delay(duration);
      break;
      case 1:
-     tone(SPEAKER_OUT, 261.63);
-     delay(duration);
+     tone(SPEAKER_OUT, 261.63,duration);
+     //delay(duration);
      break;
      case 2:
-     tone(SPEAKER_OUT, 293.66);
-     delay(duration);
+     tone(SPEAKER_OUT, 293.66, duration);
+     //delay(duration);
      break;
      case 3:
-     tone(SPEAKER_OUT, 329.63);
-     delay(duration);
+     tone(SPEAKER_OUT, 329.63, duration);
+     //delay(duration);
      break;
      case 4:
-     tone(SPEAKER_OUT, 349.23);
-     delay(duration);
+     tone(SPEAKER_OUT, 349.23, duration);
+     //delay(duration);
      break;
      case 5:
-     tone(SPEAKER_OUT, 392.00);
-     delay(duration);
+     tone(SPEAKER_OUT, 392.00, duration);
+     //delay(duration);
      break;
      case 6:
-     tone(SPEAKER_OUT, 440.00);
-     delay(duration);
+     tone(SPEAKER_OUT, 440.00, duration);
+     //delay(duration);
      break;
      case 7:
      //do nothing
@@ -251,21 +262,21 @@ long normalizer(long newVal)
     }
   }
   long average = sum/MAX_BUFFERSIZE;
-  Serial.print("Average for the batch: ");
-  Serial.print(average);
+  //Serial.print("Average for the batch: ");
+  //Serial.print(average);
   
   trueAvg = ((trueAvg * (overall_c-1)) + average)/(overall_c);
   overall_c++;
 
-  Serial.print("   Total current average: ");
-  Serial.println(trueAvg);
+  //Serial.print("   Total current average: ");
+  //Serial.println(trueAvg);
  
 //  Serial.print("Packet:  ");
 //  Serial.print(counter);
 //  Serial.print("  ");
 //  Serial.print(duration);
 //  Serial.print(" microsecods read...");
-  buffer[counter] = duration;
+  buffer[counter] = newVal;
 //  Serial.print("  buffer with index of ");
 //  Serial.print(counter);
 //  Serial.print(" Has been set to:  ");
@@ -281,6 +292,9 @@ long normalizer(long newVal)
 
 int getColor(int clr[]){
    int temp = clr[colorIndex];
+   //Serial.print("Color :");
+   //Serial.print(temp);
+   //Serial.print("\n");
    return temp;
 }
 
@@ -306,7 +320,7 @@ int getNote(int note[]){
 }
 
 void updateIndex(){
-  colorIndex;
+  colorIndex++;
   LEDIndex++;
   durationIndex++;
   noteIndex++;
@@ -322,42 +336,49 @@ void setColor(int clr, int rp, int gp, int bp, int del)
               analogWrite(rp, 255);
               analogWrite(gp, 0);
               analogWrite(bp,0);
+              //Serial.println("RED");
               break;
     
     case 2:   //ORANGE
               analogWrite(rp, 255);
               analogWrite(gp, 165);
               analogWrite(bp,0);
+              //Serial.println("ORANGE");
               break;
     
     case 3:   //YELLOW
               analogWrite(rp, 255);
               analogWrite(gp, 255);
               analogWrite(bp,0);
+              //Serial.println("YELLOW");
               break;    
               
     case 4:   //GREEN
               analogWrite(rp, 0);
               analogWrite(gp, 128);
               analogWrite(bp,0);
+              //Serial.println("GREEN");
               break;    
     
     case 5:   //CYAN
               analogWrite(rp, 0);
               analogWrite(gp, 255);
               analogWrite(bp,255);
+              //Serial.println("CYAN");
               break; 
              
     case 6:   //BLUE
               analogWrite(rp, 0);
               analogWrite(gp, 0);
               analogWrite(bp,255);
+              //Serial.println("BLUE");
               break;   
              
     case 7:   //VIOLET
               analogWrite(rp, 238);
               analogWrite(gp, 130);
               analogWrite(bp,238);
+              //Serial.println("VIOLET");
               break; 
     
     case 8:   //WHITE
@@ -366,7 +387,7 @@ void setColor(int clr, int rp, int gp, int bp, int del)
               analogWrite(bp,0);
               break;    
   }
-  delay(1000/del);
+  delay(5000/del);
   
   //delay(50);
   
