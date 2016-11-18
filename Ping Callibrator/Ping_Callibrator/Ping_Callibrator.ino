@@ -87,6 +87,7 @@ int colorIndex = 0;
 int LEDIndex =  0;
 int durationIndex = 0;
 int noteIndex = 0;
+int dura = 500;
                           
 // ==================================================================              
 
@@ -102,9 +103,9 @@ pinMode(SPEAKER_OUT, OUTPUT);
 //TODO : set pin 8 to OUTPUT
 pinMode(8, OUTPUT);
 
-
-
- 
+for (int i = 1; i < 7; i++){
+ pinMode(i, OUTPUT);
+} 
 }
 
 void loop()
@@ -114,25 +115,23 @@ void loop()
   // First, let's light up the relevant LED, and see whether the user steps on it.
   // If the user steps on the right box, we play the tune.
    //Serial.print("Size of arry:"); Serial.print(sizeof(twinkleColors));
+   
+   
 
   // set left LED which shoes the current box to be stepped
-  
   setColor(getColor(twinkleColors), leftRed, leftGreen, leftBlue, getDuration(twinkleDuration));
   
-<<<<<<< HEAD
   if(colorIndex + 1 < sizeof(twinkleColors)/2)
-=======
-  if(colorIndex + 1 < (sizeof(twinkleColors)/2))
->>>>>>> 9568fb7b777500e7c2725d51a6e052c050994b2b
   setColor(getColor(twinkleColors)+1, rightRed, rightGreen, rightBlue, getDuration(twinkleDuration));
   
-  //Serial.print("Read() = "); Serial.print(read()); Serial.print("\n");
-  if(read() == getNote(twinkleNotes)) 
-    generateTone(getNote(twinkleNotes), getDuration(twinkleDuration));
+  while(true){
+      if(read() == getNote(twinkleNotes)) { generateTone(getNote(twinkleNotes), getDuration(twinkleDuration)); break; }
+  }
   
   //Serial.print("Note : "); Serial.print(getNote(twinkleNotes)); Serial.print("\n");
+  generateTone(0, dura);
   updateIndex();
-  delay(10);
+  //delay(10);
 }
 // function that returns the latest read value. refer to global conastants for tones.
 int read()
@@ -144,39 +143,32 @@ int read()
      //returns matrix value from specified range index.
      if(x1Val + OFFSET <= parameter && parameter < x2Val - OFFSET) // C
     {
-      Serial.println("IT'S REEED");
       return 1;
     }
     else if(x2Val + OFFSET <= parameter && parameter < x3Val - OFFSET) // D
     {
-      Serial.println("IT'S GREEN");
       return 2;
     }
     else if(x3Val + OFFSET <= parameter && parameter < x4Val - OFFSET) // E
     {
-      Serial.println("IT'S YELLOW");
       return 3;
     }
     else if(x4Val + OFFSET <= parameter && parameter < x5Val - OFFSET) // F
     {
-      Serial.println("IT'S BLUE");
       return 4;
     }
     else if(x5Val + OFFSET <= parameter && parameter < x6Val - OFFSET) // G
     {
-      Serial.println("IT'S VIOLET");
       return 5;
     }
     else if(x6Val + OFFSET <= parameter && parameter < endLine - OFFSET) // A
     {
-      Serial.println("IT'S ORANGE");
       return 6;
     }
     else 
     {
       if(parameter > x1Val && parameter < endLine)
       {
-        Serial.println("IT'S NUTHIN");
         return 7;
       }
       else
@@ -215,7 +207,7 @@ long lowPassFilter(long newVal)
 
 void generateTone(int index, long duration)
 {
-  duration = 1000/duration;
+  //duration = 1000/duration;
   Serial.println("Sound!!!");
   switch(index)
   {
@@ -225,28 +217,28 @@ void generateTone(int index, long duration)
      delay(duration);
      break;
      case 1:
-     tone(SPEAKER_OUT, 261.63,duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 261.63);
+     delay(duration);
      break;
      case 2:
-     tone(SPEAKER_OUT, 293.66, duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 293.66);
+     delay(duration);
      break;
      case 3:
-     tone(SPEAKER_OUT, 329.63, duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 329.63);
+     delay(duration);
      break;
      case 4:
-     tone(SPEAKER_OUT, 349.23, duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 349.23);
+     delay(duration);
      break;
      case 5:
-     tone(SPEAKER_OUT, 392.00, duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 392.00);
+     delay(duration);
      break;
      case 6:
-     tone(SPEAKER_OUT, 440.00, duration);
-     //delay(duration);
+     tone(SPEAKER_OUT, 440.00);
+     delay(duration);
      break;
      case 7:
      //do nothing
@@ -320,7 +312,8 @@ int getLED(int led[]){
 
 int getDuration(int dur[]){
    int temp = dur[durationIndex];
-   return temp;
+   
+   return 1000/temp;
 }
 
 // This function returns which Npte needs to adapted next
@@ -398,7 +391,7 @@ void setColor(int clr, int rp, int gp, int bp, int del)
               analogWrite(bp,0);
               break;    
   }
-  delay(5000/del);
+  //delay(5000/del);
   
   //delay(50);
   
