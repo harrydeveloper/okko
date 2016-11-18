@@ -113,7 +113,7 @@ void loop()
   // set left LED which shoes the current box to be stepped
   setColor(getColor(twinkleColors), leftRed, leftGreen, leftBlue, getDuration(twinkleDuration));
   
-  if(colorIndex + 1 < twinkleColor.length)
+  if(colorIndex + 1 < (sizeof(twinkleColors)/2))
   setColor(getColor(twinkleColors)+1, rightRed, rightGreen, rightBlue, getDuration(twinkleDuration));
   
   if(read() == getNote(twinkleNotes)) 
@@ -131,32 +131,39 @@ int read()
      //returns matrix value from specified range index.
      if(x1Val + OFFSET <= parameter && parameter < x2Val - OFFSET) // C
     {
+      Serial.println("IT'S REEED");
       return 1;
     }
     else if(x2Val + OFFSET <= parameter && parameter < x3Val - OFFSET) // D
     {
+      Serial.println("IT'S GREEN");
       return 2;
     }
     else if(x3Val + OFFSET <= parameter && parameter < x4Val - OFFSET) // E
     {
+      Serial.println("IT'S YELLOW");
       return 3;
     }
     else if(x4Val + OFFSET <= parameter && parameter < x5Val - OFFSET) // F
     {
+      Serial.println("IT'S BLUE");
       return 4;
     }
     else if(x5Val + OFFSET <= parameter && parameter < x6Val - OFFSET) // G
     {
+      Serial.println("IT'S VIOLET");
       return 5;
     }
     else if(x6Val + OFFSET <= parameter && parameter < endLine - OFFSET) // A
     {
+      Serial.println("IT'S ORANGE");
       return 6;
     }
     else 
     {
       if(parameter > x1Val && parameter < endLine)
       {
+        Serial.println("IT'S NUTHIN");
         return 7;
       }
       else
