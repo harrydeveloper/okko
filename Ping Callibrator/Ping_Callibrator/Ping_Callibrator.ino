@@ -1,5 +1,19 @@
 //copy from here:
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+// Function declarations
+int read();
+long readDistance();
+long lowPassFilter(long);
+void generateTone(int, long);
+long normalizer(long);
+int getLED(int[]);
+int getColor(int[]);
+int getDuration(int[]);
+int getNote(int[]);
+void updateIndex();
+void setColor(int, int, int, int, int);
+
 long delayAlpha = 0.5;
 long delay_prev = 0;
 long overall_c = 1;
@@ -24,6 +38,58 @@ const int SPEAKER_OUT = 9;
 long counter = 0;
 long duration = 0;
 
+
+
+
+//LEDS
+int leftRed = 1; int leftGreen = 2; int leftBlue =3;
+int rightRed = 4; int rightGreen = 5; int rightBlue = 6; 
+
+// ===============================================================
+// Song Arrays with necessary colors and LEDs
+
+// the color codes
+int twinkleColors[] = { 1, 1, 7, 7, 2, 2, 7,
+                        6, 6, 3, 3, 4, 4, 1,
+                        7, 7, 6, 6, 3, 3, 4,
+                        7, 7, 6, 6, 3, 3, 4,
+                        1, 1, 7, 7, 2, 2, 7,
+                        6, 6, 3, 3, 4, 4, 1};
+
+// The LED to be blinked. 0 for left 1, 1 for right
+int twinkleLED[] = { 0, 0, 1, 1, 1, 1, 1,
+                     1, 1, 1, 1, 1, 1, 0,
+                     1, 1, 1, 1, 1, 1, 0,
+                     1, 1, 1, 1, 1, 1, 0,      
+                     0, 0, 1, 1, 1, 1, 1,
+                     1, 1, 1, 1, 1, 1, 0};
+                     
+// LED blink duration
+int twinkleDuration[] = { 8, 8, 8, 8, 8, 8, 4,
+                          8, 8, 8, 8, 8, 8, 4,
+                          8, 8, 8, 7, 6, 6, 4,
+                          8, 8, 8, 7, 6, 6, 4,
+                          8, 8, 8, 8, 8, 8, 4,
+                          8, 8, 8, 8, 8, 8, 4};
+
+//C = 1   D =2    E = 3   F = 4   G = 5   A = 6                          
+int twinkleNotes[] = { 1, 1, 5, 5, 6, 6, 5,
+                       4, 4, 3, 3, 2, 2, 1,
+                       5, 5, 4, 4, 3, 3, 2,
+                       5, 5, 4, 4, 3, 3, 2,
+                       1, 1, 5, 5, 6, 6, 5,
+                       4, 4, 3, 3, 2, 2, 1};
+                       
+                          
+//Temp Data for indexes
+
+int colorIndex = 0;
+int LEDIndex =  0;
+int durationIndex = 0;
+int noteIndex = 0;
+                          
+// ==================================================================              
+
 void setup() 
 {
 // initialize serial communication:
@@ -33,16 +99,33 @@ pinMode(SPEAKER_OUT, OUTPUT);
 Serial.print("Doing average tests on ");
 Serial.print(MAX_BUFFERSIZE);
 Serial.println(" readings");
+//TODO : set pin 8 to OUTPUT
+pinMode(8, OUTPUT);
 }
 
 void loop()
 {
-
+  //TODO : Init game
+  
+  // First, let's light up the relevant LED, and see whether the user steps on it.
+  // If the user steps on the right box, we play the tune.
+  
+  // set left LED which shoes the current box to be stepped
+  setColor(getColor(twinkleColors), leftRed, leftGreen, leftBlue, getDuration(twinkleDuration));
+  
+  if(colorIndex + 1 < twinkleColor.length)
+  setColor(getColor(twinkleColors)+1, rightRed, rightGreen, rightBlue, getDuration(twinkleDuration));
+  
+  if(read() == getNote(twinkleNotes)) 
+    generateTone(getNote(twinkleNotes), getDuration(twinkleDuration));
+  
+  
 }
 // function that returns the latest read value. refer to global conastants for tones.
 int read()
 {
-    parameter = readDistance();
+    
+    float parameter = readDistance();
     parameter = lowPassFilter(parameter);
     parameter = normalizer(parameter);  
      //returns matrix value from specified range index.
@@ -81,6 +164,7 @@ int read()
         return 0;
       }
     }
+}
 
 // =====================================    FUNCTIONS    =================================================:
 
@@ -190,6 +274,104 @@ long normalizer(long newVal)
   delay(DELAY);
   return average;
 }
+
+//=============================================================================
+// This function focuses on returning the next input Note and Light up the LEDs
+// 
+
+int getColor(int clr[]){
+   int temp = clr[colorIndex];
+   return temp;
+}
+
+// This function returns which LED to be blinked next
+
+int getLED(int led[]){
+   int temp = led[LEDIndex];
+   return temp;
+}
+
+// This function returns which duration needs to adapted next
+
+int getDuration(int dur[]){
+   int temp = dur[durationIndex];
+   return temp;
+}
+
+// This function returns which Npte needs to adapted next
+
+int getNote(int note[]){
+   int temp = note[noteIndex];
+   return temp;
+}
+
+void updateIndex(){
+  colorIndex;
+  LEDIndex++;
+  durationIndex++;
+  noteIndex++;
+}
+
+// This function sets the color
+
+void setColor(int clr, int rp, int gp, int bp, int del)
+{
+  
+  switch(clr){
+    case 1:   //RED
+              analogWrite(rp, 255);
+              analogWrite(gp, 0);
+              analogWrite(bp,0);
+              break;
+    
+    case 2:   //ORANGE
+              analogWrite(rp, 255);
+              analogWrite(gp, 165);
+              analogWrite(bp,0);
+              break;
+    
+    case 3:   //YELLOW
+              analogWrite(rp, 255);
+              analogWrite(gp, 255);
+              analogWrite(bp,0);
+              break;    
+              
+    case 4:   //GREEN
+              analogWrite(rp, 0);
+              analogWrite(gp, 128);
+              analogWrite(bp,0);
+              break;    
+    
+    case 5:   //CYAN
+              analogWrite(rp, 0);
+              analogWrite(gp, 255);
+              analogWrite(bp,255);
+              break; 
+             
+    case 6:   //BLUE
+              analogWrite(rp, 0);
+              analogWrite(gp, 0);
+              analogWrite(bp,255);
+              break;   
+             
+    case 7:   //VIOLET
+              analogWrite(rp, 238);
+              analogWrite(gp, 130);
+              analogWrite(bp,238);
+              break; 
+    
+    case 8:   //WHITE
+              analogWrite(rp, 0);
+              analogWrite(gp, 0);
+              analogWrite(bp,0);
+              break;    
+  }
+  delay(1000/del);
+  
+  //delay(50);
+  
+}
+
 
 
 
