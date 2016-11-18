@@ -24,7 +24,7 @@ git push -u origin master
 
 **Using RGB.h**
 
-7 distinguishable colors available. Available 1-8 for different colors.
+7 distinguishable colors available. 
 
 ```
 
@@ -38,11 +38,7 @@ Example :
 
 ```
 
-int redPin = 9; int greenPin = 10; int bluePin = 11;
-
-setColor(1, redPin, greenPin, bluePin);
-
-``` 
+int redPin = 9; int greenPin 
 
 > Good luck!
 
