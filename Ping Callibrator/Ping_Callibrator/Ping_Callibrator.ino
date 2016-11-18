@@ -265,7 +265,7 @@ long normalizer(long newVal)
 //  Serial.print("  ");
 //  Serial.print(duration);
 //  Serial.print(" microsecods read...");
-  buffer[counter] = duration;
+  buffer[counter] = newVal;
 //  Serial.print("  buffer with index of ");
 //  Serial.print(counter);
 //  Serial.print(" Has been set to:  ");
