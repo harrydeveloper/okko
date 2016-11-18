@@ -7,10 +7,10 @@
 
 #include <Arduino.h>
 
-void setColor(int clr, int rp, int gp, int bp, int del);
+void setColor(int clr, int rp, int gp, int bp, float del);
 
 
-void setColor(int clr, int rp, int gp, int bp, int del)
+void setColor(int clr, int rp, int gp, int bp, float del)
 {
   
   switch(clr){

@@ -30,7 +30,7 @@ git push -u origin master
 
 #include "RGB.h"
 
-setColor(int ColorCode, int redPin, int greenPin, int bluePin, float duration);
+setColor(int ColorCode, int redPin, int greenPin, int bluePin, int duration);
 
 ```
 
@@ -39,7 +39,7 @@ Example :
 ```
 int redPin = 9; int greenPin = 10; int bluePin = 11;
 
-setColor(1, redPin, greenPin, bluePin, 100);
+setColor(1, redPin, greenPin, bluePin, 8);
 ``` 
 
 > Good luck!

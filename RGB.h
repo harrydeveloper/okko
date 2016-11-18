@@ -7,10 +7,10 @@
 
 #include <Arduino.h>
 
-void setColor(int clr, int rp, int gp, int bp, float del);
+void setColor(int clr, int rp, int gp, int bp, int del);
 
 
-void setColor(int clr, int rp, int gp, int bp, float del)
+void setColor(int clr, int rp, int gp, int bp, int del)
 {
   
   switch(clr){
@@ -62,5 +62,5 @@ void setColor(int clr, int rp, int gp, int bp, float del)
               analogWrite(bp,0);
               break;    
   }
-  delay(del);
+  delay(1000/del);
 }
