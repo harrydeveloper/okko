@@ -102,9 +102,9 @@ pinMode(SPEAKER_OUT, OUTPUT);
 //TODO : set pin 8 to OUTPUT
 pinMode(8, OUTPUT);
 
-
-
- 
+for (int i = 1; i < 7; i++){
+ pinMode(i, OUTPUT);
+} 
 }
 
 void loop()
