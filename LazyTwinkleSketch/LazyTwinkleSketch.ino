@@ -3,7 +3,8 @@
 int rr=1; int rg=2; int rb=3;
 int lr=4; int lg=5; int lb=6;
 
-void setup(){
+void setup()
+{
    for (int i = 1; i < 7; i++){
      pinMode(i, OUTPUT);
    }
